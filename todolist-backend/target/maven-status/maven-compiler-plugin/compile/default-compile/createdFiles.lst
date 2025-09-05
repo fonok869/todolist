@@ -1,0 +1,14 @@
+com\todolist\TodolistBackendApplication.class
+com\todolist\dto\CategoryDto.class
+com\todolist\entity\Category.class
+com\todolist\controller\TodoController.class
+com\todolist\service\CategoryService.class
+com\todolist\entity\Todo.class
+com\todolist\service\TodoService.class
+com\todolist\repository\CategoryRepository.class
+com\todolist\controller\CategoryController.class
+com\todolist\dto\TodoDto.class
+com\todolist\config\DataInitializer.class
+com\todolist\config\GlobalExceptionHandler.class
+com\todolist\repository\TodoRepository.class
+com\todolist\config\CorsConfig.class

@@ -1,0 +1,14 @@
+C:\dev\workspaces\todolist\todolist-backend\src\main\java\com\todolist\repository\CategoryRepository.java
+C:\dev\workspaces\todolist\todolist-backend\src\main\java\com\todolist\repository\TodoRepository.java
+C:\dev\workspaces\todolist\todolist-backend\src\main\java\com\todolist\dto\CategoryDto.java
+C:\dev\workspaces\todolist\todolist-backend\src\main\java\com\todolist\config\DataInitializer.java
+C:\dev\workspaces\todolist\todolist-backend\src\main\java\com\todolist\service\TodoService.java
+C:\dev\workspaces\todolist\todolist-backend\src\main\java\com\todolist\TodolistBackendApplication.java
+C:\dev\workspaces\todolist\todolist-backend\src\main\java\com\todolist\controller\TodoController.java
+C:\dev\workspaces\todolist\todolist-backend\src\main\java\com\todolist\config\CorsConfig.java
+C:\dev\workspaces\todolist\todolist-backend\src\main\java\com\todolist\config\GlobalExceptionHandler.java
+C:\dev\workspaces\todolist\todolist-backend\src\main\java\com\todolist\dto\TodoDto.java
+C:\dev\workspaces\todolist\todolist-backend\src\main\java\com\todolist\entity\Category.java
+C:\dev\workspaces\todolist\todolist-backend\src\main\java\com\todolist\service\CategoryService.java
+C:\dev\workspaces\todolist\todolist-backend\src\main\java\com\todolist\entity\Todo.java
+C:\dev\workspaces\todolist\todolist-backend\src\main\java\com\todolist\controller\CategoryController.java
