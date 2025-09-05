@@ -26,4 +26,7 @@ dist-ssr
 playwright-report/
 test-results/
 
+.claude
+.playwright-mcp
+
 todolist-backend/target
