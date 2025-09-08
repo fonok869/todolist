@@ -4,7 +4,6 @@ import com.todolist.dto.CategoryDto;
 import com.todolist.entity.Category;
 import com.todolist.repository.CategoryRepository;
 import com.todolist.repository.TodoRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,12 +11,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 public class CategoryService {
     
     private final CategoryRepository categoryRepository;
     private final TodoRepository todoRepository;
+    
+    public CategoryService(CategoryRepository categoryRepository, TodoRepository todoRepository) {
+        this.categoryRepository = categoryRepository;
+        this.todoRepository = todoRepository;
+    }
     
     public List<CategoryDto> getAllCategories() {
         return categoryRepository.findAllOrderByCreated()

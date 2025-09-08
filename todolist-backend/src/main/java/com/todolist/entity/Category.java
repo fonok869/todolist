@@ -3,19 +3,14 @@ package com.todolist.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "categories")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Category {
     
     @Id
@@ -51,5 +46,99 @@ public class Category {
     @PreUpdate
     protected void onUpdate() {
         auditDateModified = LocalDateTime.now();
+    }
+
+    // Constructors
+    public Category() {
+    }
+
+    public Category(Long id, String name, LocalDateTime dateCreated, 
+                   LocalDateTime auditDateCreated, LocalDateTime auditDateModified, 
+                   List<Todo> todos) {
+        this.id = id;
+        this.name = name;
+        this.dateCreated = dateCreated;
+        this.auditDateCreated = auditDateCreated;
+        this.auditDateModified = auditDateModified;
+        this.todos = todos;
+    }
+
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public LocalDateTime getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(LocalDateTime dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public LocalDateTime getAuditDateCreated() {
+        return auditDateCreated;
+    }
+
+    public void setAuditDateCreated(LocalDateTime auditDateCreated) {
+        this.auditDateCreated = auditDateCreated;
+    }
+
+    public LocalDateTime getAuditDateModified() {
+        return auditDateModified;
+    }
+
+    public void setAuditDateModified(LocalDateTime auditDateModified) {
+        this.auditDateModified = auditDateModified;
+    }
+
+    public List<Todo> getTodos() {
+        return todos;
+    }
+
+    public void setTodos(List<Todo> todos) {
+        this.todos = todos;
+    }
+
+    // equals and hashCode
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Category category = (Category) o;
+        return Objects.equals(id, category.id) &&
+               Objects.equals(name, category.name) &&
+               Objects.equals(dateCreated, category.dateCreated) &&
+               Objects.equals(auditDateCreated, category.auditDateCreated) &&
+               Objects.equals(auditDateModified, category.auditDateModified);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, dateCreated, auditDateCreated, auditDateModified);
+    }
+
+    // toString
+    @Override
+    public String toString() {
+        return "Category{" +
+               "id=" + id +
+               ", name='" + name + '\'' +
+               ", dateCreated=" + dateCreated +
+               ", auditDateCreated=" + auditDateCreated +
+               ", auditDateModified=" + auditDateModified +
+               '}';
     }
 }

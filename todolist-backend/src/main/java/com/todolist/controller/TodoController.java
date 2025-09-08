@@ -3,7 +3,6 @@ package com.todolist.controller;
 import com.todolist.dto.TodoDto;
 import com.todolist.service.TodoService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +11,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/todos")
-@RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174", "http://localhost:5175"})
 public class TodoController {
     
     private final TodoService todoService;
+    
+    public TodoController(TodoService todoService) {
+        this.todoService = todoService;
+    }
     
     @GetMapping
     public ResponseEntity<List<TodoDto>> getAllTodos() {

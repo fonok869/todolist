@@ -3,7 +3,6 @@ package com.todolist.controller;
 import com.todolist.dto.CategoryDto;
 import com.todolist.service.CategoryService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +11,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
-@RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174", "http://localhost:5175"})
 public class CategoryController {
     
     private final CategoryService categoryService;
+    
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
     
     @GetMapping
     public ResponseEntity<List<CategoryDto>> getAllCategories() {

@@ -2,17 +2,20 @@ package com.todolist.config;
 
 import com.todolist.entity.Category;
 import com.todolist.repository.CategoryRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
-@Slf4j
 public class DataInitializer implements CommandLineRunner {
     
+    private static final Logger log = LoggerFactory.getLogger(DataInitializer.class);
     private final CategoryRepository categoryRepository;
+    
+    public DataInitializer(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
     
     @Override
     public void run(String... args) throws Exception {
