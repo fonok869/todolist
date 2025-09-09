@@ -44,6 +44,11 @@ public class Todo {
     @JoinColumn(name = "category_id", nullable = false)
     @JsonBackReference
     private Category category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
+    private User user;
     
     @PrePersist
     protected void onCreate() {
@@ -150,6 +155,14 @@ public class Todo {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     // equals and hashCode

@@ -3,6 +3,7 @@ package com.todolist.service;
 import com.todolist.dto.TodoDto;
 import com.todolist.entity.Category;
 import com.todolist.entity.Todo;
+import com.todolist.entity.User;
 import com.todolist.repository.CategoryRepository;
 import com.todolist.repository.TodoRepository;
 import org.springframework.stereotype.Service;
@@ -18,44 +19,50 @@ public class TodoService {
     
     private final TodoRepository todoRepository;
     private final CategoryRepository categoryRepository;
+    private final UserService userService;
     
-    public TodoService(TodoRepository todoRepository, CategoryRepository categoryRepository) {
+    public TodoService(TodoRepository todoRepository, CategoryRepository categoryRepository, UserService userService) {
         this.todoRepository = todoRepository;
         this.categoryRepository = categoryRepository;
+        this.userService = userService;
     }
     
     public List<TodoDto> getAllTodos() {
-        return todoRepository.findAllOrderedByCategoryAndCompletion()
+        User currentUser = userService.getCurrentUser();
+        return todoRepository.findByUserOrderedByCategoryAndCompletion(currentUser)
                 .stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
     
     public List<TodoDto> getTodosByCategory(String categoryName) {
-        Category category = categoryRepository.findByName(categoryName)
+        User currentUser = userService.getCurrentUser();
+        Category category = categoryRepository.findByUserAndName(currentUser, categoryName)
                 .orElseThrow(() -> new RuntimeException("Category not found: " + categoryName));
         
-        return todoRepository.findByCategoryOrderByRankingAsc(category)
+        return todoRepository.findByUserAndCategoryOrderByRankingAsc(currentUser, category)
                 .stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
     
     public TodoDto getTodoById(Long id) {
-        Todo todo = todoRepository.findById(id)
+        User currentUser = userService.getCurrentUser();
+        Todo todo = todoRepository.findByIdAndUser(id, currentUser)
                 .orElseThrow(() -> new RuntimeException("Todo not found with id: " + id));
         return convertToDto(todo);
     }
     
     public TodoDto createTodo(TodoDto todoDto) {
-        Category category = categoryRepository.findByName(todoDto.getCategoryName())
+        User currentUser = userService.getCurrentUser();
+        Category category = categoryRepository.findByUserAndName(currentUser, todoDto.getCategoryName())
                 .orElseThrow(() -> new RuntimeException("Category not found: " + todoDto.getCategoryName()));
         
         // Check for ranking conflicts
-        Optional<Todo> conflictingTodo = todoRepository.findByCategoryAndRankingAndNotDone(category, todoDto.getRanking());
+        Optional<Todo> conflictingTodo = todoRepository.findByUserAndCategoryAndRankingAndNotDone(currentUser, category, todoDto.getRanking());
         if (conflictingTodo.isPresent()) {
             // Shift rankings if there's a conflict
-            shiftRankingsDown(category, todoDto.getRanking());
+            shiftRankingsDown(currentUser, category, todoDto.getRanking());
         }
         
         Todo todo = new Todo();
@@ -64,27 +71,29 @@ public class TodoService {
         todo.setRanking(todoDto.getRanking());
         todo.setDone(todoDto.getDone() != null ? todoDto.getDone() : false);
         todo.setCategory(category);
+        todo.setUser(currentUser);
         
         Todo saved = todoRepository.save(todo);
         return convertToDto(saved);
     }
     
     public TodoDto updateTodo(Long id, TodoDto todoDto) {
-        Todo todo = todoRepository.findById(id)
+        User currentUser = userService.getCurrentUser();
+        Todo todo = todoRepository.findByIdAndUser(id, currentUser)
                 .orElseThrow(() -> new RuntimeException("Todo not found with id: " + id));
         
         // Update category if changed
         if (todoDto.getCategoryName() != null && !todoDto.getCategoryName().equals(todo.getCategory().getName())) {
-            Category newCategory = categoryRepository.findByName(todoDto.getCategoryName())
+            Category newCategory = categoryRepository.findByUserAndName(currentUser, todoDto.getCategoryName())
                     .orElseThrow(() -> new RuntimeException("Category not found: " + todoDto.getCategoryName()));
             todo.setCategory(newCategory);
         }
         
         // Check for ranking conflicts if ranking changed
         if (todoDto.getRanking() != null && !todoDto.getRanking().equals(todo.getRanking())) {
-            Optional<Todo> conflictingTodo = todoRepository.findByCategoryAndRankingAndNotDone(todo.getCategory(), todoDto.getRanking());
+            Optional<Todo> conflictingTodo = todoRepository.findByUserAndCategoryAndRankingAndNotDone(currentUser, todo.getCategory(), todoDto.getRanking());
             if (conflictingTodo.isPresent() && !conflictingTodo.get().getId().equals(todo.getId())) {
-                shiftRankingsDown(todo.getCategory(), todoDto.getRanking());
+                shiftRankingsDown(currentUser, todo.getCategory(), todoDto.getRanking());
             }
             todo.setRanking(todoDto.getRanking());
         }
@@ -104,13 +113,15 @@ public class TodoService {
     }
     
     public void deleteTodo(Long id) {
-        Todo todo = todoRepository.findById(id)
+        User currentUser = userService.getCurrentUser();
+        Todo todo = todoRepository.findByIdAndUser(id, currentUser)
                 .orElseThrow(() -> new RuntimeException("Todo not found with id: " + id));
         todoRepository.delete(todo);
     }
     
     public TodoDto toggleTodo(Long id) {
-        Todo todo = todoRepository.findById(id)
+        User currentUser = userService.getCurrentUser();
+        Todo todo = todoRepository.findByIdAndUser(id, currentUser)
                 .orElseThrow(() -> new RuntimeException("Todo not found with id: " + id));
         
         todo.setDone(!todo.getDone());
@@ -119,8 +130,9 @@ public class TodoService {
     }
     
     public List<TodoDto> reorderTodos(List<TodoDto> todoDtos) {
+        User currentUser = userService.getCurrentUser();
         for (TodoDto dto : todoDtos) {
-            Todo todo = todoRepository.findById(dto.getId())
+            Todo todo = todoRepository.findByIdAndUser(dto.getId(), currentUser)
                     .orElseThrow(() -> new RuntimeException("Todo not found with id: " + dto.getId()));
             todo.setRanking(dto.getRanking());
             todoRepository.save(todo);
@@ -131,8 +143,8 @@ public class TodoService {
                 .collect(Collectors.toList());
     }
     
-    private void shiftRankingsDown(Category category, Integer fromRanking) {
-        List<Todo> todosToShift = todoRepository.findByCategoryAndRankingGreaterThanEqualAndNotDoneOrderByRanking(category, fromRanking);
+    private void shiftRankingsDown(User user, Category category, Integer fromRanking) {
+        List<Todo> todosToShift = todoRepository.findByUserAndCategoryAndRankingGreaterThanEqualAndNotDoneOrderByRanking(user, category, fromRanking);
         
         for (Todo todo : todosToShift) {
             todo.setRanking(todo.getRanking() + 1);

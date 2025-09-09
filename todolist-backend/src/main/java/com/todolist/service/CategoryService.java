@@ -2,6 +2,7 @@ package com.todolist.service;
 
 import com.todolist.dto.CategoryDto;
 import com.todolist.entity.Category;
+import com.todolist.entity.User;
 import com.todolist.repository.CategoryRepository;
 import com.todolist.repository.TodoRepository;
 import org.springframework.stereotype.Service;
@@ -16,50 +17,58 @@ public class CategoryService {
     
     private final CategoryRepository categoryRepository;
     private final TodoRepository todoRepository;
+    private final UserService userService;
     
-    public CategoryService(CategoryRepository categoryRepository, TodoRepository todoRepository) {
+    public CategoryService(CategoryRepository categoryRepository, TodoRepository todoRepository, UserService userService) {
         this.categoryRepository = categoryRepository;
         this.todoRepository = todoRepository;
+        this.userService = userService;
     }
     
     public List<CategoryDto> getAllCategories() {
-        return categoryRepository.findAllOrderByCreated()
+        User currentUser = userService.getCurrentUser();
+        return categoryRepository.findByUserOrderByCreated(currentUser)
                 .stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
     
     public CategoryDto getCategoryById(Long id) {
-        Category category = categoryRepository.findById(id)
+        User currentUser = userService.getCurrentUser();
+        Category category = categoryRepository.findByIdAndUser(id, currentUser)
                 .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
         return convertToDto(category);
     }
     
     public CategoryDto getCategoryByName(String name) {
-        Category category = categoryRepository.findByName(name)
+        User currentUser = userService.getCurrentUser();
+        Category category = categoryRepository.findByUserAndName(currentUser, name)
                 .orElseThrow(() -> new RuntimeException("Category not found with name: " + name));
         return convertToDto(category);
     }
     
     public CategoryDto createCategory(CategoryDto categoryDto) {
-        if (categoryRepository.existsByName(categoryDto.getName())) {
+        User currentUser = userService.getCurrentUser();
+        if (categoryRepository.existsByUserAndName(currentUser, categoryDto.getName())) {
             throw new RuntimeException("Category with name '" + categoryDto.getName() + "' already exists");
         }
         
         Category category = new Category();
         category.setName(categoryDto.getName());
+        category.setUser(currentUser);
         
         Category saved = categoryRepository.save(category);
         return convertToDto(saved);
     }
     
     public CategoryDto updateCategory(Long id, CategoryDto categoryDto) {
-        Category category = categoryRepository.findById(id)
+        User currentUser = userService.getCurrentUser();
+        Category category = categoryRepository.findByIdAndUser(id, currentUser)
                 .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
         
         // Check if new name already exists for a different category
         if (!category.getName().equals(categoryDto.getName()) && 
-            categoryRepository.existsByName(categoryDto.getName())) {
+            categoryRepository.existsByUserAndName(currentUser, categoryDto.getName())) {
             throw new RuntimeException("Category with name '" + categoryDto.getName() + "' already exists");
         }
         
@@ -69,7 +78,8 @@ public class CategoryService {
     }
     
     public void deleteCategory(Long id) {
-        Category category = categoryRepository.findById(id)
+        User currentUser = userService.getCurrentUser();
+        Category category = categoryRepository.findByIdAndUser(id, currentUser)
                 .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
         
         // This will cascade delete all todos in this category
@@ -83,7 +93,7 @@ public class CategoryService {
         dto.setDateCreated(category.getDateCreated());
         dto.setAuditDateCreated(category.getAuditDateCreated());
         dto.setAuditDateModified(category.getAuditDateModified());
-        dto.setTodoCount(todoRepository.countByCategory(category));
+        dto.setTodoCount(todoRepository.countByUserAndCategory(category.getUser(), category));
         return dto;
     }
 }

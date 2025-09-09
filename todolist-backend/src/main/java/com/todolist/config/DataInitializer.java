@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-@Component
+// @Component  // Disabled - categories are now user-specific
 public class DataInitializer implements CommandLineRunner {
     
     private static final Logger log = LoggerFactory.getLogger(DataInitializer.class);

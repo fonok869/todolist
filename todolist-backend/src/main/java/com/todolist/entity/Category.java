@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,7 +20,7 @@ public class Category {
     
     @NotBlank(message = "Category name is required")
     @Size(max = 100, message = "Category name must not exceed 100 characters")
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
     
     @Column(name = "date_created")
@@ -34,6 +35,11 @@ public class Category {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Todo> todos;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
+    private User user;
     
     @PrePersist
     protected void onCreate() {
@@ -110,6 +116,14 @@ public class Category {
 
     public void setTodos(List<Todo> todos) {
         this.todos = todos;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     // equals and hashCode
