@@ -1,27 +1,54 @@
 package com.todolist.config;
 
 import com.todolist.entity.Category;
+import com.todolist.entity.User;
 import com.todolist.repository.CategoryRepository;
+import com.todolist.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-// @Component  // Disabled - categories are now user-specific
+@Component
 public class DataInitializer implements CommandLineRunner {
-    
+
     private static final Logger log = LoggerFactory.getLogger(DataInitializer.class);
     private final CategoryRepository categoryRepository;
-    
-    public DataInitializer(CategoryRepository categoryRepository) {
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public DataInitializer(CategoryRepository categoryRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.categoryRepository = categoryRepository;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
     
     @Override
     public void run(String... args) throws Exception {
+        initializeDefaultUser();
         initializeDefaultCategories();
     }
-    
+
+    private void initializeDefaultUser() {
+        String defaultEmail = "test@test.hu";
+
+        if (!userRepository.existsByEmail(defaultEmail)) {
+            log.info("Initializing default user...");
+
+            User defaultUser = new User();
+            defaultUser.setUsername("testuser");
+            defaultUser.setEmail(defaultEmail);
+            defaultUser.setPassword(passwordEncoder.encode("HalekTamasAKiraly"));
+
+            userRepository.save(defaultUser);
+
+            log.info("Default user created successfully with email: {}", defaultEmail);
+        } else {
+            log.info("Default user already exists, skipping initialization");
+        }
+    }
+
     private void initializeDefaultCategories() {
         if (categoryRepository.count() == 0) {
             log.info("Initializing default categories...");
