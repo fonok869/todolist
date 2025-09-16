@@ -11,6 +11,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Configuration
@@ -34,51 +35,36 @@ public class CorsConfig implements WebMvcConfigurer {
     @Value("${cors.max-age:3600}")
     private long maxAge;
     
-    @Profile("production")
+//    @Profile("production")
+//    @Override
+//    public void addCorsMappings(CorsRegistry registry) {
+//        registry.addMapping("/api/**")
+//                .allowedOrigins(allowedOrigins.toArray(new String[0]))
+//                .allowedMethods(allowedMethods.toArray(new String[0]))
+//                .allowedHeaders(allowedHeaders.toArray(new String[0]))
+//                .allowCredentials(allowCredentials)
+//                .maxAge(maxAge);
+//    }
+    
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**")
-                .allowedOrigins(allowedOrigins.toArray(new String[0]))
-                .allowedMethods(allowedMethods.toArray(new String[0]))
-                .allowedHeaders(allowedHeaders.toArray(new String[0]))
-                .allowCredentials(allowCredentials)
-                .maxAge(maxAge);
-    }
-    
-    @Profile("!production")
-    public void addTestCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*")
-                .allowedMethods("*")
-                .allowedHeaders("*")
-                .allowCredentials(false);
+                .allowedOriginPatterns("http://localhost:4173")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
+                .allowedHeaders("Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers")
+                .allowCredentials(true)
+                .maxAge(3600);
     }
-    
-    @Profile("production")
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(Arrays.asList(allowedOriginPatterns));
-        configuration.setAllowedMethods(allowedMethods);
-        configuration.setAllowedHeaders(allowedHeaders);
-        configuration.setAllowCredentials(allowCredentials);
-        configuration.setMaxAge(maxAge);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", configuration);
-        return source;
-    }
-    
-    @Profile("!production")
-    @Bean
-    public CorsConfigurationSource testCorsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("*"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(false);
+        configuration.setAllowedOriginPatterns(List.of("http://localhost:4173"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
+        configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
-        
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
