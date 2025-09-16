@@ -52,15 +52,20 @@ public class DataInitializer implements CommandLineRunner {
     private void initializeDefaultCategories() {
         if (categoryRepository.count() == 0) {
             log.info("Initializing default categories...");
-            
+
+            User defaultUser = userRepository.findByEmail("test@test.hu")
+                .orElseThrow(() -> new RuntimeException("Default user not found"));
+
             Category personalGoals = new Category();
             personalGoals.setName("Personal Goals");
+            personalGoals.setUser(defaultUser);
             categoryRepository.save(personalGoals);
-            
+
             Category professionalGoals = new Category();
             professionalGoals.setName("Professional Goals");
+            professionalGoals.setUser(defaultUser);
             categoryRepository.save(professionalGoals);
-            
+
             log.info("Default categories created successfully");
         } else {
             log.info("Categories already exist, skipping initialization");
