@@ -25,11 +25,11 @@ export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const formatMessage = (key: string, params?: Record<string, string | number>): string => {
     const message = (t as any)[key] || key;
-    
+
     if (!params) return message;
-    
+
     return Object.entries(params).reduce((text, [key, value]) => {
-      return text.replace(new RegExp(`{${key}}`, 'g'), String(value));
+      return text.replaceAll(`{${key}}`, String(value));
     }, message);
   };
 
