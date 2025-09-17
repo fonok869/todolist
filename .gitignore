@@ -31,3 +31,17 @@ test-results/
 
 todolist-backend/target/*
 todolist-frontend/target/*
+
+# Environment and sensitive configuration files
+# Backend properties files with sensitive data
+**/application-dev.properties
+**/application-prod.properties
+**/application-local.properties
+
+# Frontend environment files (keep .env.example)
+**/.env
+**/.env.local
+**/.env.development
+**/.env.staging
+**/.env.production
+!**/.env.example

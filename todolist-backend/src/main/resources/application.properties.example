@@ -1,0 +1,50 @@
+# Example configuration file for TodoList Backend
+# Copy this file to application-dev.properties and fill in your actual values
+# DO NOT commit files with real secrets to the repository
+
+# Server Configuration
+server.port=8080
+server.servlet.context-path=/
+
+# Database Configuration (H2 for development)
+spring.datasource.url=jdbc:h2:mem:todolist
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+
+# H2 Console (for development only)
+spring.h2.console.enabled=true
+
+# JPA Configuration
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.jpa.hibernate.ddl-auto=create-drop
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+# Logging
+logging.level.com.todolist=DEBUG
+logging.level.org.springframework.web=DEBUG
+logging.level.org.hibernate.SQL=DEBUG
+
+# JSON Configuration
+spring.jackson.serialization.write-dates-as-timestamps=false
+spring.jackson.time-zone=UTC
+
+# Application Configuration
+spring.application.name=todolist-backend
+
+# Management endpoints
+management.endpoints.web.exposure.include=info,health
+
+# JWT Configuration - REPLACE WITH SECURE VALUES
+# Generate a strong secret key (at least 256 bits / 32 characters)
+jwt.secret=YOUR_SECURE_JWT_SECRET_HERE_AT_LEAST_32_CHARACTERS
+jwt.expiration=86400
+
+# CORS Configuration
+cors.allowed-origin-patterns=http://localhost:4173,http://localhost:3000,http://localhost:5173
+
+# Environment Variables Alternative:
+# You can also use environment variables instead of property files:
+# jwt.secret=${JWT_SECRET:default-secret-for-dev-only}
+# spring.datasource.password=${DB_PASSWORD:}
