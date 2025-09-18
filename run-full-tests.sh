@@ -62,7 +62,7 @@ done
 
 echo
 echo "Starting Frontend Server..."
-cd ../todolist-app
+cd ../todolist-frontend
 npm run dev &
 FRONTEND_PID=$!
 

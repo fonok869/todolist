@@ -1,58 +1,17 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
-import { BackendTodoProvider, useBackendTodos } from './contexts/BackendTodoContext';
-import { I18nProvider, useI18n } from './contexts/I18nContext';
+import { I18nProvider } from './contexts/I18nContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { ThemeToggle } from './components/ThemeToggle';
-import { CategorySelector } from './components/CategorySelector';
-import { TodoList } from './components/TodoList';
 import { LoadingSpinner } from './components/LoadingSpinner';
-import { ErrorMessage } from './components/ErrorMessage';
-import { AuthWrapper } from './components/AuthWrapper';
-import { UserMenu } from './components/UserMenu';
+import { HomePage } from './pages/HomePage';
+import { LoginPage } from './pages/LoginPage';
+import { LogoutPage } from './pages/LogoutPage';
 import './App.css'
 
-const AuthenticatedApp: React.FC = () => {
-  const { t } = useI18n();
-  const { loading, error, refreshTodos } = useBackendTodos();
-  
-  if (loading) {
-    return (
-      <div className="App">
-        <LoadingSpinner message="Loading your todo list..." />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="App">
-        <ErrorMessage error={error} onRetry={refreshTodos} />
-      </div>
-    );
-  }
-  
-  return (
-    <div className="App">
-      <header className="app-header">
-        <h1>{t.appTitle}</h1>
-        <div className="header-actions">
-          <ThemeToggle />
-          <UserMenu />
-        </div>
-      </header>
-      
-      <main className="app-main">
-        <CategorySelector />
-        <TodoList />
-      </main>
-    </div>
-  );
-};
-
-const AppContent: React.FC = () => {
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth();
-  
+
   if (isLoading) {
     return (
       <div className="App">
@@ -60,15 +19,31 @@ const AppContent: React.FC = () => {
       </div>
     );
   }
-  
+
   if (!isAuthenticated) {
-    return <AuthWrapper />;
+    return <Navigate to="/login" replace />;
   }
-  
+
+  return <>{children}</>;
+};
+
+const AppContent: React.FC = () => {
   return (
-    <BackendTodoProvider>
-      <AuthenticatedApp />
-    </BackendTodoProvider>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/logout" element={<LogoutPage />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <HomePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Router>
   );
 };
 

@@ -30,7 +30,7 @@ echo ✓ Backend is ready!
 
 echo.
 echo Starting Frontend Server...
-cd ..\todolist-app
+cd ..\todolist-frontend
 start "Frontend Server" cmd /c "npm run dev"
 
 REM Wait for frontend to start

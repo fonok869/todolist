@@ -1,5 +1,5 @@
 {
-  "name": "todolist-app",
+  "name": "todolist-frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -25,7 +25,8 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "react-router-dom": "^7.9.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",

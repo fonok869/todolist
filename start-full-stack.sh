@@ -12,7 +12,7 @@ echo "Waiting 15 seconds for backend to start..."
 sleep 15
 
 echo "Starting Frontend (React + Vite)..."
-cd todolist-app
+cd todolist-frontend
 npm run dev &
 FRONTEND_PID=$!
 cd ..

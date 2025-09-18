@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Structure
 
-This is a React TypeScript Todo List application built with Vite. The main application code is located in `todolist-app/`.
+This is a React TypeScript Todo List application built with Vite. The main application code is located in `todolist-frontend/`.
 
 ### Key Architecture Components
 
@@ -24,10 +24,10 @@ This is a React TypeScript Todo List application built with Vite. The main appli
 
 ## Development Commands
 
-Navigate to the `todolist-app` directory before running these commands:
+Navigate to the `todolist-frontend` directory before running these commands:
 
 ```bash
-cd todolist-app
+cd todolist-frontend
 ```
 
 - **Development server**: `npm run dev`

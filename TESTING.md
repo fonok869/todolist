@@ -25,13 +25,13 @@ This guide explains how to run Playwright tests with different backend configura
    mvn install
    
    # Install frontend dependencies
-   cd ../todolist-app
+   cd ../todolist-frontend
    npm install
    ```
 
 ### Option 1: Tests Against Development Backend (Default)
 ```bash
-cd todolist-app
+cd todolist-frontend
 npm run test           # Run tests headless
 npm run test:ui        # Run tests with UI
 npm run test:headed    # Run tests in headed mode
@@ -47,7 +47,7 @@ cd todolist-backend
 run-test-server.bat       # On Windows
 
 # Terminal 2: Run tests against test backend
-cd todolist-app
+cd todolist-frontend
 npm run test:with-backend       # Run tests headless
 npm run test:with-backend:ui    # Run tests with UI
 ```
@@ -59,7 +59,7 @@ cd todolist-backend
 mvn spring-boot:run -Dspring-boot.run.profiles=test
 
 # In another terminal, run tests
-cd todolist-app
+cd todolist-frontend
 TEST_PROFILE=test npm run test
 ```
 
@@ -118,7 +118,7 @@ mvn spring-boot:run -Dspring-boot.run.profiles=test &
 sleep 30
 
 # Run tests
-cd todolist-app
+cd todolist-frontend
 TEST_PROFILE=test npm run test
 
 # Cleanup
