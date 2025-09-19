@@ -12,12 +12,19 @@ spring.datasource.driverClassName=org.h2.Driver
 spring.datasource.username=sa
 spring.datasource.password=
 
+# Liquibase Database Configuration (separate connection)
+spring.liquibase.url=
+spring.liquibase.driverClassName=
+spring.liquibase.user=
+spring.liquibase.password=
+spring.liquibase.change-log=classpath:db/changelog/db.changelog-master.xml
+
 # H2 Console (for development only)
 spring.h2.console.enabled=true
 
 # JPA Configuration
 spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
-spring.jpa.hibernate.ddl-auto=create-drop
+spring.jpa.hibernate.ddl-auto=none
 spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.format_sql=true
 
