@@ -7,6 +7,9 @@ import { LoadingSpinner } from './components/LoadingSpinner';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { LogoutPage } from './pages/LogoutPage';
+import { SignInPage } from './pages/SignInPage';
+import { EmailValidationPage } from './pages/EmailValidationPage';
+import { EmailValidationPendingPage } from './pages/EmailValidationPendingPage';
 import './App.css'
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -21,7 +24,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/signin" replace />;
   }
 
   return <>{children}</>;
@@ -32,7 +35,11 @@ const AppContent: React.FC = () => {
     <Router>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/signin" element={<SignInPage />} />
+        <Route path="/signup" element={<LoginPage />} />
         <Route path="/logout" element={<LogoutPage />} />
+        <Route path="/validate-email" element={<EmailValidationPage />} />
+        <Route path="/email-validation-pending" element={<EmailValidationPendingPage />} />
         <Route
           path="/"
           element={

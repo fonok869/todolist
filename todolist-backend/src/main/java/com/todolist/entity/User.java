@@ -41,6 +41,15 @@ public class User {
     @Column(name = "audit_date_modified")
     private LocalDateTime auditDateModified;
 
+    @Column(name = "email_validated", nullable = false)
+    private boolean emailValidated = false;
+
+    @Column(name = "email_validation_token")
+    private String emailValidationToken;
+
+    @Column(name = "email_validation_token_expiry")
+    private LocalDateTime emailValidationTokenExpiry;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Todo> todos = new ArrayList<>();
 
@@ -140,5 +149,29 @@ public class User {
 
     public void setCategories(List<Category> categories) {
         this.categories = categories;
+    }
+
+    public boolean isEmailValidated() {
+        return emailValidated;
+    }
+
+    public void setEmailValidated(boolean emailValidated) {
+        this.emailValidated = emailValidated;
+    }
+
+    public String getEmailValidationToken() {
+        return emailValidationToken;
+    }
+
+    public void setEmailValidationToken(String emailValidationToken) {
+        this.emailValidationToken = emailValidationToken;
+    }
+
+    public LocalDateTime getEmailValidationTokenExpiry() {
+        return emailValidationTokenExpiry;
+    }
+
+    public void setEmailValidationTokenExpiry(LocalDateTime emailValidationTokenExpiry) {
+        this.emailValidationTokenExpiry = emailValidationTokenExpiry;
     }
 }
