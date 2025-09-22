@@ -8,5 +8,6 @@
     <include file="db/changelog/001-create-users-table.xml"/>
     <include file="db/changelog/002-create-categories-table.xml"/>
     <include file="db/changelog/003-create-todos-table.xml"/>
+    <include file="db/changelog/004-add-email-validation-fields.xml"/>
 
 </databaseChangeLog>

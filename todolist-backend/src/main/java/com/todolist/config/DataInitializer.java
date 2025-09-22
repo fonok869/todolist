@@ -40,7 +40,7 @@ public class DataInitializer implements CommandLineRunner {
             defaultUser.setUsername("testuser");
             defaultUser.setEmail(defaultEmail);
             defaultUser.setPassword(passwordEncoder.encode("HalekTamasAKiraly"));
-
+            defaultUser.setEmailValidated(true);
             userRepository.save(defaultUser);
 
             log.info("Default user created successfully with email: {}", defaultEmail);

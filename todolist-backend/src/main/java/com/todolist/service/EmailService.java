@@ -20,6 +20,9 @@ public class EmailService {
     @Value("${app.frontend.url:http://localhost:5173}")
     private String frontendUrl;
 
+    @Value("${spring.mail.username}")
+    private String emailSender;
+
     private boolean isValidEmail(String email) {
         if (email == null || email.trim().isEmpty()) {
             return false;
@@ -49,9 +52,9 @@ public class EmailService {
             String validationLink = frontendUrl + "/validate-email?token=" + validationToken;
 
             SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(emailSender);
             message.setTo(toEmail);
             message.setSubject("TodoList - Email Validation Required");
-            message.setFrom("noreply@molnarferenc.com");
             message.setText("Hello!\n\n" +
                     "Thank you for registering with TodoList Application!\n\n" +
                     "To complete your registration, please validate your email address by clicking the link below:\n\n" +
