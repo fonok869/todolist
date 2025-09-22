@@ -97,36 +97,5 @@ public class AuthController {
         return ResponseEntity.ok(new MessageResponse("User registered successfully! Please check your email to validate your account."));
     }
 
-    @GetMapping("/validate-email")
-    public ResponseEntity<?> validateEmail(@RequestParam("token") String token) {
-        if (token == null || token.trim().isEmpty()) {
-            return ResponseEntity.badRequest()
-                    .body(new MessageResponse("Invalid validation token."));
-        }
 
-        User user = userRepository.findByEmailValidationToken(token)
-                .orElse(null);
-
-        if (user == null) {
-            return ResponseEntity.badRequest()
-                    .body(new MessageResponse("Invalid validation token."));
-        }
-
-        if (user.getEmailValidationTokenExpiry().isBefore(LocalDateTime.now())) {
-            userRepository.delete(user);
-            return ResponseEntity.badRequest()
-                    .body(new MessageResponse("Validation token has expired. User account has been removed. Please register again."));
-        }
-
-        if (user.isEmailValidated()) {
-            return ResponseEntity.ok(new MessageResponse("Email is already validated."));
-        }
-
-        user.setEmailValidated(true);
-        user.setEmailValidationToken(null);
-        user.setEmailValidationTokenExpiry(null);
-        userRepository.save(user);
-
-        return ResponseEntity.ok(new MessageResponse("Email validated successfully! You can now log in."));
-    }
 }
