@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 
-export const SignInPage: React.FC = () => {
+export const SignUpPage: React.FC = () => {
   const navigate = useNavigate();
   const { signIn } = useAuth();
   const [formData, setFormData] = useState({
