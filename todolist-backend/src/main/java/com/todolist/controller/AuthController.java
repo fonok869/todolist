@@ -97,7 +97,7 @@ public class AuthController {
         return ResponseEntity.ok(new MessageResponse("User registered successfully! Please check your email to validate your account."));
     }
 
-    @GetMapping("/mail/validate-email")
+    @GetMapping("/email/validate-email")
     public ResponseEntity<?> validateEmail(@RequestParam("token") String token) {
         if (token == null || token.trim().isEmpty()) {
             return ResponseEntity.badRequest()
