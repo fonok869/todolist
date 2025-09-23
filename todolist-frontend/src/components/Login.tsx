@@ -63,7 +63,7 @@ export const Login: React.FC<LoginProps> = ({ onSwitchToRegister }) => {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2 className="auth-title">Sign In to Your Todo List</h2>
+        <h2 className="auth-title">Log in to Your Todo List</h2>
         
         {error && (
           <div className="error-message">
@@ -115,7 +115,7 @@ export const Login: React.FC<LoginProps> = ({ onSwitchToRegister }) => {
             className="auth-button primary"
             disabled={isLoading}
           >
-            {isLoading ? 'Signing In...' : 'Sign In'}
+            {isLoading ? 'Logging In...' : 'Log In'}
           </button>
         </form>
 

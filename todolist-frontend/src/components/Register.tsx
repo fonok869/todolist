@@ -83,7 +83,7 @@ export const Register: React.FC<RegisterProps> = ({ onSwitchToLogin }) => {
 
     try {
       await register(formData);
-      setSuccessMessage('Account created successfully! You can now sign in.');
+      setSuccessMessage('Account created successfully! You can now log in.');
       setFormData({ username: '', email: '', password: '' });
       setConfirmPassword('');
       setFormErrors({});
@@ -205,7 +205,7 @@ export const Register: React.FC<RegisterProps> = ({ onSwitchToLogin }) => {
               onClick={onSwitchToLogin}
               disabled={isLoading}
             >
-              Sign In
+              Log In
             </button>
           </p>
         </div>
