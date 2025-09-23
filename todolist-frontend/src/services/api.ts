@@ -88,13 +88,41 @@ export const todoApi = {
   },
 
   async updateTodo(id: string, updates: Partial<TodoItem>): Promise<TodoItem> {
-    const todoUpdate: Partial<TodoDto> = {};
-    
-    if (updates.title !== undefined) todoUpdate.title = updates.title;
-    if (updates.description !== undefined) todoUpdate.description = updates.description;
-    if (updates.ranking !== undefined) todoUpdate.ranking = updates.ranking;
-    if (updates.done !== undefined) todoUpdate.done = updates.done;
-    if (updates.category !== undefined) todoUpdate.categoryName = updates.category;
+    // First get the current todo to ensure we have all required fields
+    const currentResponse = await fetch(`${API_BASE_URL}/todos/${id}`, {
+      headers: authService.getAuthHeaders(),
+    });
+    if (!currentResponse.ok) throw new Error('Failed to fetch current todo');
+    const currentTodo: TodoDto = await currentResponse.json();
+
+    // If category is being updated, get the category ID
+    let categoryId = currentTodo.categoryId;
+    let categoryName = currentTodo.categoryName;
+
+    if (updates.category !== undefined && updates.category !== currentTodo.categoryName) {
+      // Get category by name to find its ID
+      const categoryResponse = await fetch(`${API_BASE_URL}/categories/name/${encodeURIComponent(updates.category)}`, {
+        headers: authService.getAuthHeaders(),
+      });
+      if (!categoryResponse.ok) throw new Error('Failed to find category');
+      const category: CategoryDto = await categoryResponse.json();
+      categoryId = category.id;
+      categoryName = updates.category;
+    }
+
+    // Create update object with current values as defaults, then override with updates
+    const todoUpdate: TodoDto = {
+      id: currentTodo.id,
+      title: updates.title !== undefined ? updates.title : currentTodo.title,
+      description: updates.description !== undefined ? updates.description : currentTodo.description,
+      ranking: updates.ranking !== undefined ? updates.ranking : currentTodo.ranking,
+      done: updates.done !== undefined ? updates.done : currentTodo.done,
+      categoryName: categoryName,
+      categoryId: categoryId,
+      dateCreated: currentTodo.dateCreated,
+      auditDateCreated: currentTodo.auditDateCreated,
+      auditDateModified: currentTodo.auditDateModified,
+    };
 
     const response = await fetch(`${API_BASE_URL}/todos/${id}`, {
       method: 'PUT',
