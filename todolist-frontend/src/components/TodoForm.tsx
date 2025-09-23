@@ -42,14 +42,29 @@ export const TodoForm: React.FC<TodoFormProps> = ({ isOpen, onClose, editTodo })
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (editTodo) {
-      updateTodo(editTodo.id, {
-        title: formData.title,
-        description: formData.description,
-        ranking: formData.ranking,
-      });
-      onClose();
+      // Check for ranking conflicts when editing todos
+      const { conflictingItem, affectedItems } = checkRankingConflict(
+        editTodo.category,
+        formData.ranking,
+        editTodo.id
+      );
+
+      if (conflictingItem) {
+        // Show conflict modal for edit
+        setConflictData({ conflictingItem, affectedItems });
+        setConflictModalOpen(true);
+      } else {
+        // No conflict, update normally
+        updateTodo(editTodo.id, {
+          title: formData.title,
+          description: formData.description,
+          ranking: formData.ranking,
+          category: editTodo.category,
+        });
+        onClose();
+      }
     } else {
       // Check for ranking conflicts when creating new todos
       const { conflictingItem, affectedItems } = checkRankingConflict(
@@ -76,15 +91,25 @@ export const TodoForm: React.FC<TodoFormProps> = ({ isOpen, onClose, editTodo })
   };
 
   const handleConflictConfirm = () => {
-    // Add todo with ranking shift
-    addTodoWithRankingShift({
-      title: formData.title,
-      description: formData.description,
-      category: selectedCategory,
-      ranking: formData.ranking,
-      done: false,
-    });
-    
+    if (editTodo) {
+      // For edit mode, just update the todo directly - backend will handle ranking shifts
+      updateTodo(editTodo.id, {
+        title: formData.title,
+        description: formData.description,
+        ranking: formData.ranking,
+        category: editTodo.category,
+      });
+    } else {
+      // Add todo with ranking shift
+      addTodoWithRankingShift({
+        title: formData.title,
+        description: formData.description,
+        category: selectedCategory,
+        ranking: formData.ranking,
+        done: false,
+      });
+    }
+
     setConflictModalOpen(false);
     setConflictData(null);
     onClose();
