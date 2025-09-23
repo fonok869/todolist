@@ -24,7 +24,7 @@ export const EmailValidationPage: React.FC = () => {
 
   const validateEmail = async (token: string) => {
     try {
-      const response = await fetch(`/api/auth/validate-email?token=${token}`, {
+      const response = await fetch(`/api/email/validate-email?token=${token}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -37,7 +37,7 @@ export const EmailValidationPage: React.FC = () => {
         setMessage(data.message || 'Email validated successfully! You can now log in.');
         setIsSuccess(true);
         setTimeout(() => {
-          navigate('/signin');
+          navigate('/login');
         }, 3000);
       } else {
         setMessage(data.message || 'Email validation failed. Please try again or contact support.');
@@ -70,16 +70,16 @@ export const EmailValidationPage: React.FC = () => {
           </div>
           {isSuccess && (
             <p className="redirect-message">
-              Redirecting to sign in page in 3 seconds...
+              Redirecting to login page in 3 seconds...
             </p>
           )}
           {!isSuccess && (
             <div className="actions">
               <button
-                onClick={() => navigate('/signin')}
+                onClick={() => navigate('/login')}
                 className="btn-primary"
               >
-                Go to Sign In
+                Go to Login
               </button>
               <button
                 onClick={() => navigate('/signup')}

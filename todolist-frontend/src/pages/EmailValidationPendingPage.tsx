@@ -18,7 +18,7 @@ export const EmailValidationPendingPage: React.FC = () => {
             <ol>
               <li>Check your email inbox (and spam folder)</li>
               <li>Click the validation link in the email</li>
-              <li>You'll be redirected to sign in</li>
+              <li>You'll be redirected to login</li>
             </ol>
           </div>
           <div className="important-note">
@@ -27,10 +27,10 @@ export const EmailValidationPendingPage: React.FC = () => {
           </div>
           <div className="actions">
             <button
-              onClick={() => navigate('/signin')}
+              onClick={() => navigate('/login')}
               className="btn-primary"
             >
-              Back to Sign In
+              Back to Login
             </button>
             <button
               onClick={() => navigate('/signup')}

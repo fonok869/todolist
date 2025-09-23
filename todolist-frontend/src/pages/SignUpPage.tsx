@@ -5,7 +5,7 @@ import { LoadingSpinner } from '../components/LoadingSpinner';
 
 export const SignUpPage: React.FC = () => {
   const navigate = useNavigate();
-  const { signIn } = useAuth();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     username: '',
     password: ''
@@ -33,16 +33,13 @@ export const SignUpPage: React.FC = () => {
     setError('');
 
     try {
-      const success = await signIn(formData.username, formData.password);
-
-      if (success) {
-        navigate('/');
-      }
+      await login({ username: formData.username, password: formData.password });
+      navigate('/');
     } catch (err: any) {
       if (err.message && err.message.includes('Email not validated')) {
         navigate('/email-validation-pending');
       } else {
-        setError(err.message || 'Sign in failed. Please check your credentials.');
+        setError(err.message || 'Login failed. Please check your credentials.');
       }
     } finally {
       setLoading(false);
@@ -52,7 +49,7 @@ export const SignUpPage: React.FC = () => {
   if (loading) {
     return (
       <div className="App">
-        <LoadingSpinner message="Signing in..." />
+        <LoadingSpinner message="Logging in..." />
       </div>
     );
   }
@@ -60,8 +57,8 @@ export const SignUpPage: React.FC = () => {
   return (
     <div className="App">
       <div className="container">
-        <div className="signin-page">
-          <h2>Sign In to TodoList</h2>
+        <div className="login-page">
+          <h2>Login to TodoList</h2>
 
           {error && (
             <div className="error-message">
@@ -69,7 +66,7 @@ export const SignUpPage: React.FC = () => {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="signin-form">
+          <form onSubmit={handleSubmit} className="login-form">
             <div className="form-group">
               <label htmlFor="username">Username:</label>
               <input
@@ -97,11 +94,11 @@ export const SignUpPage: React.FC = () => {
             </div>
 
             <button type="submit" className="btn-primary" disabled={loading}>
-              {loading ? 'Signing In...' : 'Sign In'}
+              {loading ? 'Logging In...' : 'Login'}
             </button>
           </form>
 
-          <div className="signin-links">
+          <div className="login-links">
             <p>
               Don't have an account? <Link to="/signup">Sign up here</Link>
             </p>

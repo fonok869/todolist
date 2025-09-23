@@ -912,8 +912,8 @@ body {
   flex-wrap: wrap;
 }
 
-/* Sign In Page */
-.signin-page {
+/* Login Page */
+.login-page {
   max-width: 400px;
   margin: 2rem auto;
   padding: 2rem;
@@ -922,30 +922,30 @@ body {
   box-shadow: var(--shadow);
 }
 
-.signin-page h2 {
+.login-page h2 {
   text-align: center;
   color: var(--text-primary);
   margin-bottom: 2rem;
 }
 
-.signin-form {
+.login-form {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
-.signin-form .form-group {
+.login-form .form-group {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.signin-form label {
+.login-form label {
   color: var(--text-primary);
   font-weight: 500;
 }
 
-.signin-form input {
+.login-form input {
   padding: 0.75rem;
   border: 1px solid var(--border-color);
   border-radius: 4px;
@@ -954,27 +954,27 @@ body {
   font-size: 1rem;
 }
 
-.signin-form input:focus {
+.login-form input:focus {
   outline: none;
   border-color: var(--primary-color);
   box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
 }
 
-.signin-links {
+.login-links {
   text-align: center;
   margin-top: 1.5rem;
 }
 
-.signin-links p {
+.login-links p {
   color: var(--text-secondary);
 }
 
-.signin-links a {
+.login-links a {
   color: var(--primary-color);
   text-decoration: none;
 }
 
-.signin-links a:hover {
+.login-links a:hover {
   text-decoration: underline;
 }
 

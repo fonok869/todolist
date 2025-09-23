@@ -8,7 +8,6 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (credentials: LoginRequest) => Promise<void>;
-  signIn: (username: string, password: string) => Promise<boolean>;
   register: (userData: RegisterRequest) => Promise<void>;
   logout: () => void;
   error: string | null;
@@ -55,24 +54,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const signIn = async (username: string, password: string): Promise<boolean> => {
-    setError(null);
-
-    try {
-      const response = await authService.login({ username, password });
-      const newUser: User = {
-        id: response.id,
-        username: response.username,
-        email: response.email,
-      };
-      setUser(newUser);
-      return true;
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Sign in failed';
-      setError(errorMessage);
-      throw error;
-    }
-  };
 
   const register = async (userData: RegisterRequest): Promise<void> => {
     setIsLoading(true);
@@ -103,7 +84,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isAuthenticated: !!user,
     isLoading,
     login,
-    signIn,
     register,
     logout,
     error,

@@ -38,7 +38,7 @@ public class AuthController {
     @Autowired
     EmailService emailService;
 
-    @PostMapping("/auth/signin")
+    @PostMapping("/auth/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
