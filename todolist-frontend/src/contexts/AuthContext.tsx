@@ -30,6 +30,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const currentUser = authService.getUser();
     if (currentUser && authService.isAuthenticated()) {
       setUser(currentUser);
+    } else {
+      // Clear any invalid auth data
+      authService.logout();
     }
     setIsLoading(false);
   }, []);

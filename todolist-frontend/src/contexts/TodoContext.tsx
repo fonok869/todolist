@@ -53,7 +53,7 @@ export const TodoProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     try {
-      const savedTodos = localStorage.getItem('todos');
+      const savedTodos = localStorage.getItem('anonymous_todos');
       if (savedTodos) {
         const parsed = JSON.parse(savedTodos);
         if (validateTodoData(parsed)) {
@@ -78,37 +78,37 @@ export const TodoProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }));
         } else {
           console.warn('Invalid todo data format, resetting');
-          localStorage.removeItem('todos');
+          localStorage.removeItem('anonymous_todos');
         }
       }
     } catch {
       console.warn('Invalid localStorage todos data, resetting');
-      localStorage.removeItem('todos');
+      localStorage.removeItem('anonymous_todos');
     }
 
     try {
-      const savedCategories = localStorage.getItem('categories');
+      const savedCategories = localStorage.getItem('anonymous_categories');
       if (savedCategories) {
         const parsed = JSON.parse(savedCategories);
         if (validateCategoryData(parsed)) {
           setCategories(parsed);
         } else {
           console.warn('Invalid category data format, using defaults');
-          localStorage.removeItem('categories');
+          localStorage.removeItem('anonymous_categories');
         }
       }
     } catch (error) {
       console.warn('Invalid localStorage categories data, using defaults');
-      localStorage.removeItem('categories');
+      localStorage.removeItem('anonymous_categories');
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('todos', JSON.stringify(todos));
+    localStorage.setItem('anonymous_todos', JSON.stringify(todos));
   }, [todos]);
 
   useEffect(() => {
-    localStorage.setItem('categories', JSON.stringify(categories));
+    localStorage.setItem('anonymous_categories', JSON.stringify(categories));
   }, [categories]);
 
   const addTodo = (todoData: Omit<TodoItem, 'id' | 'dateCreated' | 'auditDateCreated' | 'auditDateModified'>) => {

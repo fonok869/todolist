@@ -5,6 +5,7 @@ import { I18nProvider } from './contexts/I18nContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { LoadingSpinner } from './components/LoadingSpinner';
 import { HomePage } from './pages/HomePage';
+import { AnonymousHomePage } from './pages/AnonymousHomePage';
 import { LoginPage } from './pages/LoginPage';
 import { LogoutPage } from './pages/LogoutPage';
 import { SignUpPage } from './pages/SignUpPage.tsx';
@@ -39,8 +40,9 @@ const AppContent: React.FC = () => {
         <Route path="/logout" element={<LogoutPage />} />
         <Route path="/validate-email" element={<EmailValidationPage />} />
         <Route path="/email-validation-pending" element={<EmailValidationPendingPage />} />
+        <Route path="/" element={<AnonymousHomePage />} />
         <Route
-          path="/"
+          path="/dashboard"
           element={
             <ProtectedRoute>
               <HomePage />

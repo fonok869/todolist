@@ -2,7 +2,7 @@ import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type {TodoItem as TodoItemType} from '../types/index';
-import { useBackendTodos } from '../contexts/BackendTodoContext';
+import { useTodos } from '../contexts/TodoContext';
 import { useI18n } from '../contexts/I18nContext';
 
 interface TodoItemProps {
@@ -17,7 +17,7 @@ const getRankingColor = (ranking: number): string => {
 };
 
 export const TodoItem: React.FC<TodoItemProps> = ({ todo, onEdit }) => {
-  const { toggleTodo } = useBackendTodos();
+  const { toggleTodo } = useTodos();
   const { t } = useI18n();
   const {
     attributes,
@@ -67,6 +67,11 @@ export const TodoItem: React.FC<TodoItemProps> = ({ todo, onEdit }) => {
             </span>
             <span className="todo-ranking">{t.rankingPrefix}{todo.ranking}</span>
           </div>
+          {todo.description && (
+            <div className={`todo-description ${todo.done ? 'crossed-out' : ''}`}>
+              {todo.description}
+            </div>
+          )}
           <div className="todo-date">
             {t.createdLabel}: {todo.dateCreated.toLocaleDateString()}
           </div>

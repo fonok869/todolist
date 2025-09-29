@@ -67,6 +67,13 @@ export interface Translations {
   willMoveFrom: string;
   to: string;
   moveFromTo: string;
+
+  // Missing translations
+  errorSavingTodo: string;
+  titlePlaceholder: string;
+  descriptionPlaceholder: string;
+  updateTodo: string;
+  emptyState: string;
 }
 
 export const translations: Record<string, Translations> = {
@@ -139,5 +146,12 @@ export const translations: Record<string, Translations> = {
     willMoveFrom: 'will move from',
     to: 'to',
     moveFromTo: '{title} will move from {rankingPrefix}{fromRanking} to {rankingPrefix}{toRanking}',
+
+    // Missing translations
+    errorSavingTodo: 'Error saving todo. Please try again.',
+    titlePlaceholder: 'Enter todo title...',
+    descriptionPlaceholder: 'Enter todo description...',
+    updateTodo: 'Update Todo',
+    emptyState: 'No todos in this category yet. Add your first todo!',
   }
 };
