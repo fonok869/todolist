@@ -48,6 +48,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         username: response.username,
         email: response.email,
       };
+
+      // Clear anonymous user's local storage data
+      localStorage.removeItem('anonymous_todos');
+      localStorage.removeItem('anonymous_categories');
+
       setUser(newUser);
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Login failed');

@@ -31,6 +31,24 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   return <>{children}</>;
 };
 
+const AuthRedirectWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="App">
+        <LoadingSpinner message="Loading..." />
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return <>{children}</>;
+};
+
 const AppContent: React.FC = () => {
   return (
     <Router>
@@ -40,7 +58,11 @@ const AppContent: React.FC = () => {
         <Route path="/logout" element={<LogoutPage />} />
         <Route path="/validate-email" element={<EmailValidationPage />} />
         <Route path="/email-validation-pending" element={<EmailValidationPendingPage />} />
-        <Route path="/" element={<AnonymousHomePage />} />
+        <Route path="/" element={
+          <AuthRedirectWrapper>
+            <AnonymousHomePage />
+          </AuthRedirectWrapper>
+        } />
         <Route
           path="/dashboard"
           element={
