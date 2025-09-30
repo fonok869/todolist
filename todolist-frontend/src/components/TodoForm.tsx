@@ -120,18 +120,6 @@ export const TodoForm: React.FC<TodoFormProps> = ({ isOpen, onClose, editTodo })
     setConflictData(null);
   };
 
-  const sanitizeInput = (input: string): string => {
-    return input.trim().replace(/[<>]/g, '');
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: name === 'ranking' ? parseInt(value) || 1 : sanitizeInput(value),
-    }));
-  };
-
   if (!isOpen) return null;
 
   return (
@@ -148,7 +136,8 @@ export const TodoForm: React.FC<TodoFormProps> = ({ isOpen, onClose, editTodo })
                 id="title"
                 name="title"
                 value={formData.title}
-                onChange={handleChange}
+                onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                placeholder={t.titlePlaceholder}
                 maxLength={100}
                 required
               />
@@ -160,7 +149,8 @@ export const TodoForm: React.FC<TodoFormProps> = ({ isOpen, onClose, editTodo })
                 id="description"
                 name="description"
                 value={formData.description}
-                onChange={handleChange}
+                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                placeholder={t.descriptionPlaceholder}
                 maxLength={500}
                 rows={3}
               />
@@ -173,9 +163,9 @@ export const TodoForm: React.FC<TodoFormProps> = ({ isOpen, onClose, editTodo })
                 id="ranking"
                 name="ranking"
                 value={formData.ranking}
-                onChange={handleChange}
-                min={1}
-                max={100}
+                onChange={(e) => setFormData(prev => ({ ...prev, ranking: parseInt(e.target.value) || 1 }))}
+                min="1"
+                max="100"
                 required
               />
             </div>
