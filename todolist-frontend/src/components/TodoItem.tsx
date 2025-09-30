@@ -2,8 +2,12 @@ import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type {TodoItem as TodoItemType} from '../types/index';
-import { useTodos } from '../contexts/TodoContext';
 import { useI18n } from '../contexts/I18nContext';
+import { useAuth } from '../contexts/AuthContext';
+
+// Import both context hooks
+import { useTodos } from '../contexts/TodoContext';
+import { useBackendTodos } from '../contexts/BackendTodoContext';
 
 interface TodoItemProps {
   todo: TodoItemType;
@@ -17,8 +21,14 @@ const getRankingColor = (ranking: number): string => {
 };
 
 export const TodoItem: React.FC<TodoItemProps> = ({ todo, onEdit }) => {
-  const { toggleTodo } = useTodos();
+  const { isAuthenticated } = useAuth();
   const { t } = useI18n();
+
+  // Use the appropriate context based on authentication status
+  const anonymousContext = !isAuthenticated ? useTodos() : null;
+  const backendContext = isAuthenticated ? useBackendTodos() : null;
+
+  const toggleTodo = isAuthenticated ? backendContext!.toggleTodo : anonymousContext!.toggleTodo;
   const {
     attributes,
     listeners,
