@@ -1,33 +1,47 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Todo functionality', () => {
-  test('should show login requirement for todo pages', async ({ page }) => {
-    // Try to access the home page without being logged in
+  test('should allow anonymous access to homepage', async ({ page }) => {
+    // Anonymous users can access the home page without login
     await page.goto('/');
+
+    // Should stay on homepage (not redirect to login)
+    await expect(page).toHaveURL('/');
+
+    // Should show anonymous todo interface
+    await expect(page.getByRole('heading', { name: 'Todo List Manager' })).toBeVisible();
+    await expect(page.getByRole('button', { name: '+ Add Todo' })).toBeVisible();
+  });
+
+  test('should redirect dashboard to login when not authenticated', async ({ page }) => {
+    // The /dashboard route should require authentication
+    await page.goto('/dashboard');
 
     // Should be redirected to login page
     await expect(page).toHaveURL('/login');
     await expect(page.getByRole('heading', { name: 'Log in to Your Todo List' })).toBeVisible();
   });
 
-  test('should redirect to login when not authenticated', async ({ page }) => {
-    // Try various routes that should require authentication
-    const protectedRoutes = ['/', '/home', '/todos'];
-
-    for (const route of protectedRoutes) {
-      await page.goto(route);
-      await expect(page).toHaveURL('/login');
-    }
-  });
-
-  test('should not allow todo operations without login', async ({ page }) => {
-    // Go to root page (should redirect to login)
+  test('should allow anonymous todo operations', async ({ page }) => {
+    // Anonymous users can use todo functionality on homepage
     await page.goto('/');
-    await expect(page).toHaveURL('/login');
+    await page.evaluate(() => localStorage.clear());
+    await page.reload();
 
-    // Ensure we can't access protected functionality (should not see main todo interface)
-    await expect(page.getByRole('button', { name: /Add.*Todo/i })).not.toBeVisible();
-    await expect(page.locator('.todo-list, .todo-item')).not.toBeVisible();
+    // Should be able to see and use todo interface
+    await expect(page).toHaveURL('/');
+    await expect(page.getByRole('button', { name: '+ Add Todo' })).toBeVisible();
+
+    // Should be able to add a todo
+    await page.getByRole('button', { name: '+ Add Todo' }).click();
+    await expect(page.getByRole('heading', { name: 'Add Todo' })).toBeVisible();
+
+    await page.getByLabel('Title').fill('Anonymous Todo');
+    await page.getByLabel('Ranking').fill('1');
+    await page.getByRole('button', { name: '+ Add Todo' }).nth(1).click();
+
+    // Todo should appear
+    await expect(page.getByText('Anonymous Todo')).toBeVisible();
   });
 
   // Note: Todo functionality tests would require a working backend with database
