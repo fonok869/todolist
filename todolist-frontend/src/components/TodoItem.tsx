@@ -57,18 +57,12 @@ export const TodoItem: React.FC<TodoItemProps> = ({ todo, onEdit }) => {
       className={`todo-item ${todo.done ? 'completed' : ''} ${rankingColor}-priority`}
     >
       <div className="todo-item-content">
-        {!todo.done ? (
-          <input
-            type="checkbox"
-            checked={todo.done}
-            onChange={() => toggleTodo(todo.id)}
-            className="todo-checkbox"
-          />
-        ) : (
-          <div className="todo-completed-indicator">
-            ✓
-          </div>
-        )}
+        <input
+          type="checkbox"
+          checked={todo.done}
+          onChange={() => toggleTodo(todo.id)}
+          className="todo-checkbox"
+        />
         
         <div className="todo-info">
           <div className="todo-header">

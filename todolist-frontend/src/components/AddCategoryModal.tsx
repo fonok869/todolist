@@ -4,7 +4,7 @@ import { useI18n } from '../contexts/I18nContext';
 interface AddCategoryModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddCategory: (name: string) => void;
+  onAddCategory: (name: string) => boolean;
 }
 
 export const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
@@ -17,11 +17,13 @@ export const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (categoryName.trim()) {
-      onAddCategory(categoryName.trim());
-      setCategoryName('');
-      onClose();
+      const success = onAddCategory(categoryName.trim());
+      if (success) {
+        setCategoryName('');
+        onClose();
+      }
     }
   };
 

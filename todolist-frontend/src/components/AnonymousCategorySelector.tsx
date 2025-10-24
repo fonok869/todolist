@@ -11,7 +11,7 @@ export const AnonymousCategorySelector: React.FC = () => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState<string>('');
 
-  const handleAddCategory = (name: string) => {
+  const handleAddCategory = (name: string): boolean => {
     // Check if category already exists (case-insensitive)
     const categoryExists = categories.some(
       category => category.name.toLowerCase() === name.toLowerCase()
@@ -19,11 +19,12 @@ export const AnonymousCategorySelector: React.FC = () => {
 
     if (categoryExists) {
       alert(t.categoryAlreadyExists);
-      return;
+      return false;
     }
 
     addCategory(name);
     setSelectedCategory(name); // Switch to the newly created category
+    return true;
   };
 
   const handleRemoveCategory = (categoryName: string) => {
